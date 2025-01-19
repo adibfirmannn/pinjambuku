@@ -1,0 +1,124 @@
+* {
+    font-family: "Poppins", sans-serif;
+}
+
+/* navbar */
+@media (max-width: 992px) {
+    .nav-icon {
+        display: none;
+    }
+    .nav-text {
+        display: inline;
+    }
+    .nav-img,
+    .nav-item-img {
+        display: none;
+    }
+    .nav-item-profile {
+        display: inline-block;
+    }
+    .profile-name {
+        display: none;
+    }
+}
+
+@media (min-width: 992px) {
+    .nav-icon {
+        display: inline;
+    }
+    .nav-text {
+        display: none;
+    }
+    .nav-img,
+    .nav-item-img {
+        display: inline-block;
+    }
+    .nav-item-profile {
+        display: none;
+    }
+}
+
+.nav-link:hover {
+    color: #ffd460 !important;
+}
+
+.profile-name .nav-link:hover {
+    color: white !important;
+}
+
+.dropdown-item:hover {
+    color: white !important;
+    background-color: #2d4059 !important;
+}
+
+/* endnavbar */
+
+/* register */
+.register-container {
+    margin-top: 50px;
+}
+
+.register-card {
+    border: none;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    border-radius: 15px;
+    background-color: #ffffff;
+}
+
+.register-image {
+    background: url("/img/bg-pinjambuku.png") no-repeat center center;
+    background-size: cover;
+    height: 100%;
+    width: 100%;
+}
+
+.register-form {
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.register-title {
+    font-weight: bold;
+    color: #2d4059;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-control {
+    border-radius: 5px;
+    box-shadow: none;
+    border-color: #ced4da;
+}
+
+.form-control:focus {
+    box-shadow: none;
+    border-color: #ea5455;
+}
+
+.register-button {
+    background-color: #f07b3f;
+    border: none;
+    color: white;
+    font-size: 16px;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s;
+}
+
+.register-button:hover {
+    background-color: #ffd460;
+}
+
+.register-form .text-muted {
+    color: #f07b3f !important;
+}
+/* end register */
