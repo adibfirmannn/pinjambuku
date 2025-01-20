@@ -28,20 +28,27 @@ use App\Http\Controllers\Mahasiswa\MahasiswaController;
 */
 
 Route::get('/', function () {
-    return view('auth.login');
+    if (Auth::check()) {
+        $role = Auth::user()->role;
+        if ($role === 'admin') {
+            return redirect()->route('admin.dashboard');
+        } elseif ($role === 'mahasiswa') {
+            return redirect()->route('mahasiswa.dashboard');
+        }
+    }
+
+    return redirect()->route('login');
 });
-
 // Auth::routes();
-
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('register', [RegisterController::class, 'index'])->name('register');
-Route::post('register', [RegisterController::class, 'register']);
-
-Route::get('login', [LoginController::class, 'index'])->name('login');
-Route::post('login', [LoginController::class, 'login']);
-Route::get('logout', [LoginController::class, 'logout'])->name('logout');
-
+Route::middleware('redirectIfAuthenticated')->group(function () {
+    Route::get('login', [LoginController::class, 'index'])->name('login');
+    Route::post('login', [LoginController::class, 'login']);
+    Route::get('register', [RegisterController::class, 'index'])->name('register');
+    Route::post('register', [RegisterController::class, 'register']);
+    Route::get('logout', [LoginController::class, 'logout'])->name('logout');
+});
 
 
 Route::middleware(['role:admin'])->group(function () {

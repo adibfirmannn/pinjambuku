@@ -18,10 +18,15 @@ class DashboardMahasiswaController extends Controller
         $books = DB::table('bukus')
             ->join('detailkategoris', 'bukus.id', '=', 'detailkategoris.idBuku')
             ->join('kategoris', 'detailkategoris.idKategori', '=', 'kategoris.id')
-            ->select('bukus.*', DB::raw('GROUP_CONCAT(kategoris.namaKategori SEPARATOR ", ")as namaKategori'))
-            ->where('bukus.judul',  'LIKE', "%{$query}%")
-            ->orWhere('bukus.pengarang', 'LIKE', "%{$query}%")
-            ->groupBy('bukus.id')->get();
+            ->select('bukus.*', DB::raw('GROUP_CONCAT(kategoris.namaKategori SEPARATOR ", ") as namaKategori'))
+            ->where('bukus.status', 1) // Filter hanya buku dengan status 1
+            ->where(function ($q) use ($query) {
+                $q->where('bukus.judul', 'LIKE', "%{$query}%")
+                    ->orWhere('bukus.pengarang', 'LIKE', "%{$query}%");
+            })
+            ->groupBy('bukus.id')
+            ->get();
+
         return view('app.mahasiswa.dashboard', compact('books'));
     }
 

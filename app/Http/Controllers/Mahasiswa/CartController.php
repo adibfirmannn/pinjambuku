@@ -68,7 +68,7 @@ class CartController extends Controller
         $idMahasiswa = session('id');
         $tanggalPeminjaman = Carbon::now();
 
-        $cartItems = session('cart', []);
+        $cartItems = session('cart', []); // Mengambil data keranjang dari session
 
         // Tambahkan ke tabel peminjamans
         $idPeminjaman = DB::table('peminjamans')->insertGetId([
@@ -81,19 +81,26 @@ class CartController extends Controller
             'updated_at' => now(),
         ]);
 
-        // Tambahkan ke tabel detailspeminjamans
-        foreach ($cartItems as $item) {
-            $iterasi = 0;
+        // Tambahkan ke tabel detailspeminjamans dan perbarui jumlah buku
+        foreach ($cartItems as $idBuku) { // Karena array biasa, $idBuku langsung merepresentasikan ID buku
+            // Masukkan data ke tabel detailspeminjamans
             DB::table('detailspeminjamans')->insert([
-                'idBuku' => $item[$iterasi++],
+                'idBuku' => $idBuku,
                 'idPeminjaman' => $idPeminjaman,
-                'status' => 0,
+                'status' => 0, // Status 'Dipinjam'
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
+
+            // Perbarui jumlah buku di tabel bukus
+            DB::table('bukus')
+                ->where('id', $idBuku)
+                ->decrement('jumlah', 1); // Kurangi jumlah buku sebanyak 1
         }
 
+        // Kosongkan keranjang
         session()->forget('cart');
+
         return redirect()->route('mahasiswa.history')->with('success', 'Peminjaman Buku Berhasil');
     }
 }
