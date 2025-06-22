@@ -62,13 +62,12 @@
                 </li>
                 @if (Auth::guard('admin')->check())
                     <li class="nav-item mx-3 nav-item-profile">
-                        <a class="nav-link text-white" href="{{ route('admin.setting', session('id')) }}">Settings</a>
+                        <a class="nav-link text-white" href="{{ route('admin.setting') }}">Settings</a>
                     </li>
                 @endif
                 @if (Auth::guard('mahasiswa')->check())
                     <li class="nav-item mx-3 nav-item-profile">
-                        <a class="nav-link text-white"
-                            href="{{ route('mahasiswa.setting', session('id')) }}">Settings</a>
+                        <a class="nav-link text-white" href="{{ route('mahasiswa.setting') }}">Settings</a>
                     </li>
                 @endif
                 <li class="nav-item mx-3 nav-item-profile">
@@ -81,12 +80,10 @@
                             data-bs-toggle="dropdown" aria-expanded="false">
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
                             @if (Auth::guard('admin')->check())
-                                <li><a class="dropdown-item"
-                                        href="{{ route('admin.setting', session('id')) }}">Settings</a></li>
+                                <li><a class="dropdown-item" href="{{ route('admin.setting') }}">Settings</a></li>
                             @endif
                             @if (Auth::guard('mahasiswa')->check())
-                                <li><a class="dropdown-item"
-                                        href="{{ route('mahasiswa.setting', session('id')) }}">Settings</a></li>
+                                <li><a class="dropdown-item" href="{{ route('mahasiswa.setting') }}">Settings</a></li>
                             @endif
                             <li>
                                 <a class="dropdown-item" href="/logout">Logout</a>

@@ -22,7 +22,7 @@
                                 <div class="mb-3">
                                     <label for="old_password" class="form-label">Old Password</label>
                                     <input type="password" class="form-control @error('old_password') is-invalid @enderror"
-                                        id="old_password" name="old_password">
+                                        id="old_password" name="old_password" required autocomplete>
                                     @error('old_password')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -32,7 +32,7 @@
                                 <div class="mb-3">
                                     <label for="password" class="form-label">New Password</label>
                                     <input type="password" class="form-control @error('password') is-invalid @enderror"
-                                        id="password" name="password">
+                                        id="password" name="password" required autocomplete>
                                     @error('password')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -42,7 +42,7 @@
                                 <div class="mb-3">
                                     <label for="confirm_password" class="form-label">Confirm Password</label>
                                     <input type="password" class="form-control" id="password_confirmation"
-                                        name="password_confirmation">
+                                        name="password_confirmation" required autocomplete>
 
                                 </div>
                             </div>
@@ -50,7 +50,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-2">
-                                <a href="{{ route('mahasiswa.setting', session('id')) }}" class="btn btn-primary border-0"
+                                <a href="{{ route('mahasiswa.setting') }}" class="btn btn-primary border-0"
                                     style="background-color: #FFD460; width:100%">Back</a>
                             </div>
                             <div class="col-md-6">

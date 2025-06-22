@@ -14,6 +14,18 @@
                                 <h2 class="register-title">{{ __('Register') }}</h2>
                                 <form method="POST" action="{{ route('register') }}">
                                     @csrf
+                                    <div class="form-group">
+                                        <input id="namaLengkap" type="text"
+                                            class="form-control @error('namaLengkap') is-invalid @enderror"
+                                            name="namaLengkap" placeholder="Nama Lengkap" value="{{ old('namaLengkap') }}"
+                                            required autocomplete="namaLengkap" autofocus>
+
+                                        @error('namaLengkap')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
 
                                     <div class="form-group">
                                         <input id="email" type="email"

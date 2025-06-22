@@ -73,7 +73,7 @@ Route::middleware(['role:admin'])->group(function () {
         ->name('admin.borrowing-update');
     Route::get('/admin/borrowing-search', [BorrowingController::class, 'search'])
         ->name('admin.borrowing-search');
-    Route::get('/admin/setting/{id}', [AdminController::class, 'index'])->name('admin.setting');
+    Route::get('/admin/setting', [AdminController::class, 'index'])->name('admin.setting');
     Route::put('/admin/setting/{id}', [AdminController::class, 'update'])
         ->name('admin.setting.update');
 });
@@ -93,7 +93,7 @@ Route::middleware(['role:mahasiswa'])->group(function () {
         ->name('mahasiswa.formBorrow');
     Route::post('/mahasiswa/borrow', [CartController::class, 'borrow'])
         ->name('mahasiswa.borrow');
-    Route::get('/mahasiswa/setting/{id}', [MahasiswaController::class, 'index'])
+    Route::get('/mahasiswa/setting', [MahasiswaController::class, 'index'])
         ->name('mahasiswa.setting');
     Route::put('/mahasiswa/setting/{id}', [MahasiswaController::class, 'update'])
         ->name('mahasiswa.setting.update');

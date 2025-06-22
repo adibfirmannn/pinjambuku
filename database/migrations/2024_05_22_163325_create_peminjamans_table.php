@@ -13,13 +13,8 @@ return new class extends Migration
     {
         Schema::create('peminjamans', function (Blueprint $table) {
             $table->id();
-            // $table->foreignId('idAdmin')->constrained('admins')
-            //     ->onDelete('cascade')->nullable();
-            $table->foreignId('idAdmin')->nullable()->constrained('admins')
-                ->onDelete('set null');
-            //membuat foreignId idMahasiswa yang mereferensi table mahasiswas dan ketika baris parentnya dihapus maka, childnya juga dihps
-            $table->foreignId('idMahasiswa')->constrained('mahasiswas')
-                ->onDelete('cascade');
+            $table->foreignUuid('idAdmin')->references('id')->on('admins');
+            $table->foreignUuid('idMahasiswa')->references('id')->on('mahasiswas');
             $table->date('tanggalPengembalian')->nullable();
             $table->date('tanggalPeminjaman');
             $table->integer('jumlahBuku');

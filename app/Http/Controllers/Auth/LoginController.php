@@ -26,10 +26,17 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         // Validasi input
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+        $request->validate(
+            [
+                'email' => 'required|email',
+                'password' => 'required',
+            ],
+            [
+                'email.required' => 'email harus diisi',
+                'email.email' => 'email harus berbentuk @',
+                'password.required' => 'password harus diisi'
+            ]
+        );
 
         // Coba autentikasi sebagai mahasiswa
         if (Auth::guard('mahasiswa')->attempt($request->only('email', 'password'))) {

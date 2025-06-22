@@ -9,10 +9,10 @@ use Illuminate\Support\Facades\Hash;
 
 class MahasiswaController extends Controller
 {
-    public function index($id)
+    public function index()
     {
-        // dd($id);
-        $mahasiswa = Mahasiswa::find($id);
+        $idMahasiswa = session('id');
+        $mahasiswa = Mahasiswa::findOrFail($idMahasiswa);
         return view('app.mahasiswa.setting', compact('mahasiswa'));
     }
 
@@ -25,14 +25,35 @@ class MahasiswaController extends Controller
     public function update(Request $request, $id)
     {
         // Validasi input
-        $request->validate([
-            'fotoProfil' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'namaLengkap' => 'required|string|max:255',
-            'nim' => 'nullable|numeric|digits_between:8,10',
-            'email' => 'required|email|max:255',
-            'nohp' => 'nullable|numeric|digits_between:10,15',
-            'angkatan' => 'numeric|digits:4',
-        ]);
+        $request->validate(
+            [
+                'fotoProfil' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+                'namaLengkap' => 'required|string|min:3|max:100',
+                'nim' => 'nullable|string|size:12',
+                'email' => 'required|email|min:3|max:255',
+                'nohp' => 'nullable|string|size:12',
+                'angkatan' => 'string|digits:4',
+            ],
+            [
+                'fotoProfil.image' => 'foto profil harus image',
+                'fotoProfil.mimes' => 'foto profil tipenya harus jpeg/png/jpg',
+                'fotoProfil.max' => 'foto profil maximal 2048kb',
+                'namaLengkap.required' => 'nama lengkap harus diisi',
+                'namaLengkap.string' => 'nama lengkap harus string',
+                'namaLengkap.min' => 'panjang nama lengkap minimal 3',
+                'namaLengkap.max' => 'panjang nama lengkap maximal 100',
+                'nim.string' => 'nim harus string',
+                'nim.size' => 'nim harus berjumlah 12',
+                'email.required' => 'email harus diisi',
+                'email.email' => 'email harus berbentuk @',
+                'email.min' => 'panjang email minimal 3',
+                'email.max' => 'panjang email maximal 255',
+                'nohp.string' => 'nohp harus string',
+                'nohp.size' => 'nohp harus berjumlah 12',
+                'angkatan.string' => 'angkatan harus string',
+                'angkatan.digits' => 'angkatan harus berjumlah 4'
+            ]
+        );
 
         // Cari data mahasiswa berdasarkan ID
         $mahasiswa = Mahasiswa::findOrFail($id);
@@ -50,7 +71,7 @@ class MahasiswaController extends Controller
         if ($request->hasFile('fotoProfil')) {
             // Hapus fotoProfil lama jika ada
             if ($mahasiswa->fotoProfil) {
-                $oldImagePath = public_path('img/' . $mahasiswa->fotoProfil);
+                $oldImagePath = public_path('img/mahasiswa/' . $mahasiswa->fotoProfil);
                 if (file_exists($oldImagePath)) {
                     unlink($oldImagePath);
                 }
@@ -58,7 +79,7 @@ class MahasiswaController extends Controller
 
             // Simpan fotoProfil baru
             $imageName = time() . '.' . $request->fotoProfil->extension();
-            $request->fotoProfil->move(public_path('img'), $imageName);
+            $request->fotoProfil->move(public_path('img/mahasiswa/'), $imageName);
             $mahasiswa->fotoProfil = $imageName;
         }
 
@@ -77,10 +98,19 @@ class MahasiswaController extends Controller
     {
 
         // dd($request);
-        $request->validate([
-            'old_password' => 'required',
-            'password' => 'required|min:8|confirmed',
-        ]);
+        $request->validate(
+            [
+                'old_password' => 'required',
+                'password' => 'required|min:8|max:100|confirmed',
+            ],
+            [
+                'old_password.required' => 'old password harus diisi',
+                'password.required' => 'password harus diisi',
+                'password.min' => 'panjang password minimal 8',
+                'password.max' => 'panjang password maximal 100',
+                'password.confirmed' => 'confirm password tidak sama'
+            ]
+        );
 
         $mahasiswa = Mahasiswa::findOrFail($id);
 

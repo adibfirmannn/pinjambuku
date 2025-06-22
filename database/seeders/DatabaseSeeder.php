@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\User;
+use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -22,6 +24,7 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         DB::table('admins')->insert([
+            'id' => Str::uuid(),
             'email' => 'admin@gmail.com',
             'password' => Hash::make('admin123'),
             'namaLengkap' => 'Admin',
@@ -32,6 +35,7 @@ class DatabaseSeeder extends Seeder
         DB::table('mahasiswas')->insert(
             [
                 [
+                    'id' => Str::uuid(),
                     'email' => 'mahasiswa@gmail.com',
                     'password' => Hash::make('mahasiswa123'),
                     'namaLengkap' => 'Mahasiswa',
@@ -39,6 +43,7 @@ class DatabaseSeeder extends Seeder
                     'updated_at' => now(),
                 ],
                 [
+                    'id' => Str::uuid(),
                     'email' => 'adib@gmail.com',
                     'password' => Hash::make('adib123'),
                     'namaLengkap' => 'Adib Firmansyah',
@@ -136,67 +141,6 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => now(),
             ],
 
-        ]);
-
-        DB::table('peminjamans')->insert([
-            [
-                'idAdmin' => 1,
-                'idMahasiswa' => 1,
-                'tanggalPengembalian' => now(),
-                'tanggalPeminjaman' => now(),
-                'jumlahBuku' => 2,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'idAdmin' => 1,
-                'idMahasiswa' => 1,
-                'tanggalPengembalian' => now(),
-                'tanggalPeminjaman' => date('Y-m-d', strtotime('2023-08-11')),
-                'jumlahBuku' => 1,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'idAdmin' => 1,
-                'idMahasiswa' => 2,
-                'tanggalPengembalian' => now(),
-                'tanggalPeminjaman' => date('Y-m-d', strtotime('2023-08-11')),
-                'jumlahBuku' => 1,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]
-        ]);
-
-        DB::table('detailspeminjamans')->insert([
-            [
-                'idBuku' => 1,
-                'idPeminjaman' => 1,
-                'status' => 1,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'idBuku' => 2,
-                'idPeminjaman' => 1,
-                'status' => 1,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'idBuku' => 2,
-                'idPeminjaman' => 2,
-                'status' => 1,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'idBuku' => 1,
-                'idPeminjaman' => 3,
-                'status' => 1,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]
         ]);
     }
 }

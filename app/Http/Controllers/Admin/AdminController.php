@@ -9,9 +9,10 @@ use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
-    public function index($id)
+    public function index()
     {
-        $admin = Admin::find($id);
+        $idAdmin = session('id');
+        $admin = Admin::find($idAdmin);
         return view('app.admin.setting', compact('admin'));
     }
 
@@ -19,12 +20,29 @@ class AdminController extends Controller
     {
         $admin = Admin::find($id);
         // Validasi input data
-        $request->validate([
-            'namaLengkap' => 'required|string|min:3|max:100',
-            'email' => 'required|email|unique:admins,email,' . $admin->id,
-            'old_password' => 'nullable|string|min:4',
-            'password' => 'nullable|string|min:4|confirmed'
-        ]);
+        $request->validate(
+            [
+                'namaLengkap' => 'required|string|min:3|max:100',
+                'email' => 'required|email|unique:admins,email,' . $admin->id,
+                'old_password' => 'nullable|string|min:8',
+                'password' => 'nullable|string|min:8|max:100|confirmed'
+            ],
+            [
+                'namaLengkap.required' => 'nama lengkap harus diisi',
+                'namaLengkap.string' => 'nama lengkap harus string',
+                'namaLengkap.min' => 'panjang nama lengkap minimal 3',
+                'email.required' => 'email harus diisi',
+                'email.email' => 'email harus berbentuk email',
+                'email.unique' => 'email sudah terdaftar',
+                'old_password.string' => 'old password harus string',
+                'old_password.min' => 'panjang old password minimal 8',
+                'password.string' => 'password harus string',
+                'password.min' => 'panjang password minimal 8',
+                'password.max' => 'panjang password maximal 100',
+                'password.confirmed' => 'confirm password tidak sama'
+
+            ]
+        );
 
         // dd($request);
 

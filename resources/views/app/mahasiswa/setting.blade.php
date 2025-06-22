@@ -21,10 +21,15 @@
 
                         <div class="row">
                             <div class="col-md-6 d-flex flex-column align-items-center mb-3">
-                                <img src="{{ asset('img/' . $mahasiswa->fotoProfil) }}" alt="Profil" id="preview"
-                                    class="img-fluid mb-2">
-                                <input type="file" class="form-control" id="fotoProfil" name="fotoProfil"
-                                    style="width: 75%" onchange="previewImage()">
+                                <img src="{{ $mahasiswa->fotoProfil ? asset('img/mahasiswa/' . $mahasiswa->fotoProfil) : asset('img/no-image.png') }}"
+                                    alt="Profil" id="preview" class="img-fluid mb-2">
+                                <input type="file" class="form-control @error('fotoProfil') is-invalid @enderror"
+                                    id="fotoProfil" name="fotoProfil" style="width: 75%">
+                                @error('fotoProfil')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
@@ -60,7 +65,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="nohp" class="form-label">Nohp</label>
-                                    <input type="tel" class="form-control @error('nohp') is-invalid @enderror"
+                                    <input type="number" class="form-control @error('nohp') is-invalid @enderror"
                                         id="nohp" name="nohp" value="{{ old('nohp', $mahasiswa->noHp) }}">
                                     @error('nohp')
                                         <div class="invalid-feedback">
@@ -103,18 +108,3 @@
         </div>
     </div>
 @endsection
-
-@push('scripts')
-    <script>
-        function previewImage() {
-            const file = document.getElementById('fotoProfil').files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('preview').src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-    </script>
-@endpush

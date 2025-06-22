@@ -12,6 +12,11 @@
                         <div class="col-md-6 d-flex align-items-center">
                             <div class="card-body register-form">
                                 <h2 class="register-title">{{ __('Login') }}</h2>
+                                @if ($message = Session::get('success'))
+                                    <div class="alert alert-success alert-block">
+                                        <strong>{{ $message }}</strong>
+                                    </div>
+                                @endif
                                 <form method="POST" action="{{ route('login') }}">
                                     @csrf
 
