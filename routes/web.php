@@ -58,11 +58,11 @@ Route::middleware(['role:admin'])->group(function () {
         ->name('admin.create');
     Route::post('/admin/store-book', [DashboardAdminController::class, 'store'])
         ->name('admin.store.book');
-    Route::get('/admin/edit-book/{id}', [DashboardAdminController::class, 'edit'])
+    Route::get('/admin/edit-book/{buku:slug}', [DashboardAdminController::class, 'edit'])
         ->name('admin.edit');
-    Route::put('/admin/update-book/{id}', [DashboardAdminController::class, 'update'])
+    Route::put('/admin/update-book/{buku:slug}', [DashboardAdminController::class, 'update'])
         ->name('admin.update.book');
-    Route::get('/admin/show-book/{id}', [DashboardAdminController::class, 'show'])
+    Route::get('/admin/show-book/{buku:slug}', [DashboardAdminController::class, 'show'])
         ->name('admin.show');
     Route::resource('/category', CategoryController::class);
     Route::get('/admin/borrowing', [BorrowingController::class, 'index'])

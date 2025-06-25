@@ -6,6 +6,7 @@ use App\Models\Buku;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Str;
 
 class DashboardAdminController extends Controller
 {
@@ -30,7 +31,8 @@ class DashboardAdminController extends Controller
 
     public function create()
     {
-        $categories = DB::table('kategoris')->select('kategoris.id', 'kategoris.namaKategori')->get();
+        $categories = DB::table('kategoris')->select('kategoris.id', 'kategoris.namaKategori')
+            ->where('status', 1)->get();
         return view('app.admin.create-book', compact('categories'));
     }
 
@@ -39,19 +41,47 @@ class DashboardAdminController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'judul' => 'required|string|max:100|min:3',
-            'pengarang' => 'required|string|max:100|min:3',
-            'deskripsi' => 'required|string',
-            'jumlah' => 'required|integer',
-            'status' => 'required|boolean',
-            'gambar' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-            'kategori' => 'required|string'
-        ]);
+        $request->validate(
+            [
+                'judul' => 'required|string|max:100|min:3|unique:bukus,judul',
+                'pengarang' => 'required|string|max:100|min:3',
+                'deskripsi' => 'required|string|max:300|min:3',
+                'jumlah' => 'required|integer',
+                'status' => 'required|boolean',
+                'gambar' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+                'kategori' => 'required|string'
+            ],
+            [
+                'judul.required' => 'judul harus diisi',
+                'judul.string' => 'judul harus string',
+                'judul.max' => 'panjang judul maximal 100',
+                'judul.min' => 'panjang judul minimal 3',
+                'judul.unique' => 'judul sudah ada',
+                'pengarang.required' => 'pengarang harus diisi',
+                'pengarang.string' => 'pengarang harus string',
+                'pengarang.max' => 'panjang pengarang maximal 100',
+                'pengarang.min' => 'panjang pengarang minimal 3',
+                'deskripsi.required' => 'deskripsi harus diisi',
+                'deskripsi.string' => 'deskripsi harus string',
+                'deskripsi.max' => 'panjang deskripsi maximal 300',
+                'deskripsi.min' => 'panjang deskripsi minimal 3',
+                'jumlah.required' => 'jumlah harus diisi',
+                'jumlah.integer' => 'jumlah harus bilangan bulat',
+                'status.required' => 'status harus diisi',
+                'status.boolean' => 'status harus boolean',
+                'gambar.required' => 'gambar harus diisi',
+                'gambar.image' => 'gambar harus image',
+                'gambar.mimes' => 'gambar harus berupa jpeg/png/jpg',
+                'gambar.max' => 'gambar maximal 2048kb',
+                'kategori.required' => 'kategori harus diisi',
+                'kategori.string' => 'kategori harus string'
+            ]
+        );
 
         // dd($request->kategori);
         $book = new Buku();
         $book->judul = $request->judul;
+        $book->slug = Str::slug($request->judul);
         $book->pengarang = $request->pengarang;
         $book->deskripsi = $request->deskripsi;
         $book->jumlah = $request->jumlah;
@@ -59,7 +89,7 @@ class DashboardAdminController extends Controller
 
         if ($request->hasFile('gambar')) {
             $imageName = time() . '.' . $request->gambar->extension();
-            $request->gambar->move(public_path('img'), $imageName);
+            $request->gambar->move(public_path('img/buku/'), $imageName);
             $book->gambar = $imageName;
         }
 
@@ -83,13 +113,13 @@ class DashboardAdminController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Buku $buku)
     {
         $book = DB::table('bukus')
             ->join('detailkategoris', 'bukus.id', '=', 'detailkategoris.idBuku')
             ->join('kategoris', 'detailkategoris.idKategori', '=', 'kategoris.id')
             ->select('bukus.*', DB::raw('GROUP_CONCAT(kategoris.namaKategori SEPARATOR ", ") as namaKategori'))
-            ->where('bukus.id', $id)
+            ->where('bukus.slug', $buku->slug)
             ->groupBy('bukus.id')
             ->get();
 
@@ -100,36 +130,72 @@ class DashboardAdminController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Buku $buku)
     {
         $book = DB::table('bukus')
             ->join('detailkategoris', 'bukus.id', '=', 'detailkategoris.idBuku')
             ->join('kategoris', 'detailkategoris.idKategori', '=', 'kategoris.id')
             ->select('bukus.*', DB::raw('GROUP_CONCAT(kategoris.id SEPARATOR ", ") as kategoriIds',))
-            ->where('bukus.id', $id)
+            ->where('bukus.slug', $buku->slug)
             ->groupBy('bukus.id')
             ->get()->first();
-        $categories = DB::table('kategoris')->select('kategoris.id', 'kategoris.namaKategori')->get();
-
-        // dd($categories);
-        return view('app.admin.edit-book', compact('book', 'categories'));
+        // Kategori aktif (status 1) untuk select option
+        $categories = DB::table('kategoris')
+            ->select('id', 'namaKategori')
+            ->where('status', 1)
+            ->get();
+        // Kategori yang sudah dipilih buku (bisa status 0/1)
+        $selectedCategories = DB::table('kategoris')
+            ->join('detailkategoris', 'kategoris.id', '=', 'detailkategoris.idKategori')
+            ->where('detailkategoris.idBuku', $buku->id)
+            ->select('kategoris.id', 'kategoris.namaKategori')
+            ->get();
+        return view('app.admin.edit-book', compact('book', 'categories', 'selectedCategories'));
     }
 
 
-    public function update(Request $request, string $id)
+    public function update(Request $request, Buku $buku)
     {
-        $request->validate([
-            'judul' => 'required|string|max:100|min:3',
-            'pengarang' => 'required|string|max:100|min:3',
-            'deskripsi' => 'required|string',
-            'jumlah' => 'required|integer',
-            'status' => 'required|boolean',
-            'gambar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'kategori' => 'required|string'
-        ]);
+        $request->validate(
+            [
+                'judul' => 'required|string|max:100|min:3|unique:bukus,judul,' . $buku->id,
+                'pengarang' => 'required|string|max:100|min:3',
+                'deskripsi' => 'required|string|max:300|min:3',
+                'jumlah' => 'required|integer',
+                'status' => 'required|boolean',
+                'gambar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+                'kategori' => 'required|string'
+            ],
+            [
+                'judul.required' => 'judul harus diisi',
+                'judul.string' => 'judul harus string',
+                'judul.max' => 'panjang judul maximal 100',
+                'judul.min' => 'panjang judul minimal 3',
+                'judul.unique' => 'judul sudah ada',
+                'pengarang.required' => 'pengarang harus diisi',
+                'pengarang.string' => 'pengarang harus string',
+                'pengarang.max' => 'panjang pengarang maximal 100',
+                'pengarang.min' => 'panjang pengarang minimal 3',
+                'deskripsi.required' => 'deskripsi harus diisi',
+                'deskripsi.string' => 'deskripsi harus string',
+                'deskripsi.max' => 'panjang deskripsi maximal 300',
+                'deskripsi.min' => 'panjang deskripsi minimal 3',
+                'jumlah.required' => 'jumlah harus diisi',
+                'jumlah.integer' => 'jumlah harus bilangan bulat',
+                'status.required' => 'status harus diisi',
+                'status.boolean' => 'status harus boolean',
+                'gambar.required' => 'gambar harus diisi',
+                'gambar.image' => 'gambar harus image',
+                'gambar.mimes' => 'gambar harus berupa jpeg/png/jpg',
+                'gambar.max' => 'gambar maximal 2048kb',
+                'kategori.required' => 'kategori harus diisi',
+                'kategori.string' => 'kategori harus string'
+            ]
+        );
 
-        $book = Buku::find($id);
+        $book = Buku::find($buku->id);
         $book->judul = $request->judul;
+        $book->slug = Str::slug($request->judul);
         $book->pengarang = $request->pengarang;
         $book->deskripsi = $request->deskripsi;
         $book->jumlah = $request->jumlah;
@@ -140,7 +206,7 @@ class DashboardAdminController extends Controller
             // hapus gambar yang lama jika ada
             if ($book->gambar) {
                 //ambil path gambar lama
-                $oldImagePath = public_path('img/' . $book->gambar);
+                $oldImagePath = public_path('img/buku/' . $book->gambar);
                 // hapus gambar lama jika ada di server
 
                 if (file_exists($oldImagePath)) {
@@ -149,7 +215,7 @@ class DashboardAdminController extends Controller
                 }
             }
             $imageName = time() . '.' . $request->gambar->extension();
-            $request->gambar->move(public_path('img'), $imageName);
+            $request->gambar->move(public_path('img/buku/'), $imageName);
             $book->gambar = $imageName;
         }
 
@@ -158,12 +224,12 @@ class DashboardAdminController extends Controller
         $kategoriIds = explode(',', $request->kategori);
 
         // hapus detail kategori yang ada di buku tersebut
-        DB::table('detailkategoris')->where('idBuku', $id)->delete();
+        DB::table('detailkategoris')->where('idBuku', $buku->id)->delete();
 
         // simpan detail kategori yang baru dibuku tersebut
         foreach ($kategoriIds as $kategoriId) {
             DB::table('detailkategoris')->insert([
-                'idBuku' => $id,
+                'idBuku' => $buku->id,
                 'idKategori' => $kategoriId,
                 'created_at' => now(),
                 'updated_at' => now(),

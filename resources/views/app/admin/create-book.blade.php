@@ -32,7 +32,7 @@
                                 <div class="mb-3">
                                     <label for="judul" class="form-label">Judul</label>
                                     <input type="text" class="form-control  @error('judul') is-invalid @enderror"
-                                        id="judul" name="judul" value="{{ old('judul') }}">
+                                        id="judul" name="judul" value="{{ old('judul') }}" required>
                                     @error('judul')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -42,7 +42,7 @@
                                 <div class="mb-3">
                                     <label for="pengarang" class="form-label">Pengarang</label>
                                     <input type="text" class="form-control @error('pengarang') is-invalid @enderror"
-                                        id="pengarang" name="pengarang" value="{{ old('pengarang') }}">
+                                        id="pengarang" name="pengarang" value="{{ old('pengarang') }}" required>
                                     @error('pengarang')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -52,7 +52,7 @@
                                 <div class="mb-3">
                                     <label for="deskripsi" class="form-label">Deskripsi</label>
                                     <textarea class="form-control @error('deskripsi') is-invalid @enderror" name="deskripsi" id="deskripsi"
-                                        style="height: 100px;">{{ old('deskripsi') }}</textarea>
+                                        style="height: 100px;" required>{{ old('deskripsi') }}</textarea>
                                     @error('deskripsi')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -62,7 +62,7 @@
                                 <div class="mb-3">
                                     <label for="jumlah" class="form-label">Jumlah</label>
                                     <input type="number" class="form-control @error('jumlah') is-invalid @enderror"
-                                        id="jumlah" name="jumlah" value="{{ old('jumlah') }}">
+                                        id="jumlah" name="jumlah" value="{{ old('jumlah') }}" required>
                                     @error('jumlah')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -72,7 +72,7 @@
                                 <div class="mb-3">
                                     <label for="status" class="form-label">Status</label>
                                     <select class="form-select @error('status') is-invalid @enderror" id="status"
-                                        name="status">
+                                        name="status" required>
                                         <option value="" {{ old('status', '') == '' ? 'selected' : '' }}>Pilih Status
                                         </option>
                                         <option value="1" {{ old('status') == 1 ? 'selected' : '' }}>Active</option>
@@ -87,7 +87,8 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="kategoriSelect" class="form-label">Kategori</label>
-                                    <select class="form-select @error('kategori') is-invalid @enderror" id="kategoriSelect">
+                                    <select class="form-select @error('kategori') is-invalid @enderror" id="kategoriSelect"
+                                        required>
                                         <option value="">Pilih Kategori</option>
                                         @foreach ($categories as $category)
                                             <option value="{{ $category->id }}">{{ $category->namaKategori }}</option>
@@ -110,7 +111,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <input type="file" class="form-control @error('gambar') is-invalid @enderror"
-                                        id="gambar" name="gambar">
+                                        id="gambar" name="gambar" required>
                                     @error('gambar')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>

@@ -19,7 +19,7 @@ class DashboardMahasiswaController extends Controller
             ->join('detailkategoris', 'bukus.id', '=', 'detailkategoris.idBuku')
             ->join('kategoris', 'detailkategoris.idKategori', '=', 'kategoris.id')
             ->select('bukus.*', DB::raw('GROUP_CONCAT(kategoris.namaKategori SEPARATOR ", ") as namaKategori'))
-            ->where('bukus.status', 1) // Filter hanya buku dengan status 1
+            ->where('bukus.status', 1) 
             ->where(function ($q) use ($query) {
                 $q->where('bukus.judul', 'LIKE', "%{$query}%")
                     ->orWhere('bukus.pengarang', 'LIKE', "%{$query}%");

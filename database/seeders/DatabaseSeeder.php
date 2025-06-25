@@ -56,6 +56,7 @@ class DatabaseSeeder extends Seeder
         DB::table('kategoris')->insert([
             [
                 'namaKategori' => 'Teknologi',
+                'slug' => Str::slug('Teknologi'),
                 'deskripsi' => 'Semua tentang teknologi terbaru',
                 'status' => 1,
                 'created_at' => now(),
@@ -63,6 +64,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'namaKategori' => 'Bisnis',
+                'slug' => Str::slug('Bisnis'),
                 'deskripsi' => 'Tips dan trik bisnis sukses',
                 'status' => 1,
                 'created_at' => now(),
@@ -70,6 +72,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'namaKategori' => 'Kesehatan',
+                'slug' => Str::slug('Kesehatan'),
                 'deskripsi' => 'Informasi kesehatan dan gaya hidup',
                 'status' => 1,
                 'created_at' => now(),
@@ -77,6 +80,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'namaKategori' => 'Pendidikan',
+                'slug' => Str::slug('Pendidikan'),
                 'deskripsi' => 'Berita dan perkembangan di dunia pendidikan',
                 'status' => 0,
                 'created_at' => now(),
@@ -84,6 +88,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'namaKategori' => 'Hiburan',
+                'slug' => Str::slug('Hiburan'),
                 'deskripsi' => 'Dunia hiburan dan selebriti',
                 'status' => 1,
                 'created_at' => now(),
@@ -94,6 +99,7 @@ class DatabaseSeeder extends Seeder
         DB::table('bukus')->insert([
             [
                 'judul' => 'Belajar Laravel',
+                'slug' => Str::slug('Belajar Laravel'),
                 'pengarang' => 'John Doe',
                 'deskripsi' => 'Buku panduan lengkap belajar Laravel dari dasar hingga mahir.',
                 'gambar' => 'belajarlaravel.jpg',
@@ -104,6 +110,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'judul' => 'Mastering PHP',
+                'slug' => Str::slug('Mastering PHP'),
                 'pengarang' => 'Jane Smith',
                 'deskripsi' => 'Buku ini membahas konsep-konsep lanjutan dalam PHP.',
                 'gambar' => 'masteringphp.jpg',

@@ -48,9 +48,9 @@
                     <div class="card">
                         <div class="card-body shadow">
                             <div class="row">
-                                <div class="col-md-6">
-                                    <a href="{{ route('admin.show', $book->id) }}">
-                                        <img src="{{ asset('img/' . $book->gambar) }}" alt="{{ $book->judul }}"
+                                <div class="col-md-6 flex align-content-center">
+                                        <a href="{{ route('admin.show', $book->slug) }}">
+                                        <img src="{{ asset('img/buku/' . $book->gambar) }}" alt="{{ $book->judul }}"
                                             class="img-fluid" style="height: 200px">
                                     </a>
                                 </div>
@@ -60,7 +60,10 @@
                                         {{ Str::limit($book->pengarang, 20, '...') }}</p>
                                     <p class="card-text mt-3">{{ $book->namaKategori }}</p>
                                     <p class="card-text mt-3">{{ Str::limit($book->deskripsi, 20, '...') }}</p>
-                                    <a href="{{ route('admin.edit', $book->id) }}"
+                                    <button class="btn {{ $book->status ? 'btn-success' : 'btn-danger' }} mb-3">
+                                        {{ $book->status ? 'Active' : 'Non Active' }}
+                                    </button>
+                                    <a href="{{ route('admin.edit', $book->slug) }}"
                                         class="btn btn-primary border border-white"
                                         style="background-color: #F07B3F; width:100%">Edit</a>
                                 </div>

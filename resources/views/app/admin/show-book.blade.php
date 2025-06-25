@@ -9,8 +9,8 @@
                 <div class="shadow rounded">
                     <div class="row">
                         <div class="col-lg-5">
-                            <img src="{{ asset('/img/' . $book[0]->gambar) }}" alt="{{ $book[0]->judul }}" class="img-fluid"
-                                style="object-fit: cover;">
+                            <img src="{{ asset('/img/buku/' . $book[0]->gambar) }}" alt="{{ $book[0]->judul }}"
+                                class="img-fluid" style="object-fit: cover;">
                         </div>
                         <div class="col-lg-6 p-5">
                             <h5 class="text-center">{{ $book[0]->judul }}</h5>

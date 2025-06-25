@@ -20,7 +20,7 @@
                             @foreach ($cartItems as $item)
                                 <div class="row justify-content-evenly align-items-center mb-3">
                                     <div class="col-lg-2 mb-2">
-                                        <img src="{{ asset('img/' . $item->gambar) }}" alt="{{ $item->judul }}"
+                                        <img src="{{ asset('img/buku/' . $item->gambar) }}" alt="{{ $item->judul }}"
                                             class="img-fluid" style="max-height: 100px;">
                                     </div>
                                     <div class="col-lg-4 mb-2">

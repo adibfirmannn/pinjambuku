@@ -36,7 +36,7 @@ class MahasiswaController extends Controller
             ],
             [
                 'fotoProfil.image' => 'foto profil harus image',
-                'fotoProfil.mimes' => 'foto profil tipenya harus jpeg/png/jpg',
+                'fotoProfil.mimes' => 'foto profil harus berupa jpeg/png/jpg',
                 'fotoProfil.max' => 'foto profil maximal 2048kb',
                 'namaLengkap.required' => 'nama lengkap harus diisi',
                 'namaLengkap.string' => 'nama lengkap harus string',

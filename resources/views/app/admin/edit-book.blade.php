@@ -25,7 +25,7 @@
             <div class="col-md-10">
                 <div class="shadow rounded p-5">
                     <h5 class="text-center">Edit Book</h5>
-                    <form action="{{ route('admin.update.book', $book->id) }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('admin.update.book', $book->slug) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('put')
                         <div class="row">
@@ -107,7 +107,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <img src="{{ asset('/img/' . $book->gambar) }}" alt="{{ $book->judul }}"
+                                    <img src="{{ asset('/img/buku/' . $book->gambar) }}" alt="{{ $book->judul }}"
                                         width="85%" height="85%">
                                 </div>
                                 <div class="mb-3">
@@ -147,7 +147,8 @@
             const selectedCategories = $('#selectedCategories');
             const kategoriInput = $('#kategoriInput');
             let selectedKategoriIds = @json(explode(',', $book->kategoriIds));
-
+            // Mapping id ke nama kategori dari selectedCategories (bisa status 0/1)
+            const kategoriMap = @json($selectedCategories->pluck('namaKategori', 'id'));
 
             // Memperbarui tampilan kategori yang dipilih saat halaman dimuat
             updateSelectedCategories();
@@ -158,7 +159,7 @@
                 const selectedOptionValue = selectedOption.val();
 
                 // Menambahkan opsi yang dipilih ke array selectedKategoriIds jika belum ada di array
-                if (!selectedKategoriIds.includes(selectedOptionValue)) {
+                if (selectedOptionValue && !selectedKategoriIds.includes(selectedOptionValue)) {
                     selectedKategoriIds.push(selectedOptionValue);
                     updateSelectedCategories(); // Memperbarui tampilan kategori yang dipilih
                 }
@@ -171,8 +172,8 @@
 
                 // Mengulangi setiap ID kategori yang dipilih untuk membuat elemen tag
                 selectedKategoriIds.forEach(id => {
-                    // Mendapatkan nama kategori berdasarkan ID dari dropdown select
-                    const categoryName = kategoriSelect.find(`option[value="${id}"]`).text();
+                    // Ambil nama kategori dari mapping, fallback ke select option jika tidak ada
+                    const categoryName = kategoriMap[id] || kategoriSelect.find(`option[value="${id}"]`).text();
                     // Membuat elemen div untuk tag kategori dengan tombol silang untuk menghapus
                     const categoryDiv = $(`
                 <div class="category-tag">

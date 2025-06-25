@@ -33,7 +33,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <a href="{{ route('mahasiswa.show', $book->id) }}">
-                                        <img src="{{ asset('img/' . $book->gambar) }}" alt="{{ $book->judul }}"
+                                        <img src="{{ asset('img/buku/' . $book->gambar) }}" alt="{{ $book->judul }}"
                                             class="img-fluid" style="height: 200px">
                                     </a>
                                 </div>
