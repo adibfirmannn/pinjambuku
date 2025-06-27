@@ -9,14 +9,14 @@
                 <div class="shadow rounded">
                     <div class="row">
                         <div class="col-lg-5">
-                            <img src="{{ asset('/img/buku/' . $book->gambar) }}" alt="Book" class="img-fluid"
+                            <img src="{{ asset('/img/buku/' . $buku->gambar) }}" alt="Book" class="img-fluid"
                                 style="object-fit: cover;">
                         </div>
                         <div class="col-lg-6 p-5">
                             <div class="mb-3">
                                 <label for="judulBuku" class="form-label">Judul Buku</label>
                                 <input type="text" class="form-control" id="judulBuku" name="judulBuku"
-                                    value="{{ $book->judul }}" disabled>
+                                    value="{{ $buku->judul }}" disabled>
                             </div>
                             <div class="mb-3">
                                 <label for="namaLengkap" class="form-label">Nama Lengkap</label>
@@ -34,7 +34,7 @@
                                         style="background-color: #FFD460; width:100%">Back</a>
                                 </div>
                                 <div class="col-md-6">
-                                    <a href="{{ route('mahasiswa.cart', $book->id) }}" class="btn btn-primary border-0"
+                                    <a href="{{ route('mahasiswa.cart', $buku->id) }}" class="btn btn-primary border-0"
                                         style="background-color: #F07B3F; width:100%">Borrow <svg
                                             xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                             fill="currentColor" class="bi bi-cart-plus" viewBox="0 0 16 16">

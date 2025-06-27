@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Mahasiswa;
 
+use App\Models\Buku;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -19,7 +20,7 @@ class DashboardMahasiswaController extends Controller
             ->join('detailkategoris', 'bukus.id', '=', 'detailkategoris.idBuku')
             ->join('kategoris', 'detailkategoris.idKategori', '=', 'kategoris.id')
             ->select('bukus.*', DB::raw('GROUP_CONCAT(kategoris.namaKategori SEPARATOR ", ") as namaKategori'))
-            ->where('bukus.status', 1) 
+            ->where('bukus.status', 1)
             ->where(function ($q) use ($query) {
                 $q->where('bukus.judul', 'LIKE', "%{$query}%")
                     ->orWhere('bukus.pengarang', 'LIKE', "%{$query}%");
@@ -49,13 +50,13 @@ class DashboardMahasiswaController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Buku $buku)
     {
         $book = DB::table('bukus')
             ->join('detailkategoris', 'bukus.id', '=', 'detailkategoris.idBuku')
             ->join('kategoris', 'detailkategoris.idKategori', '=', 'kategoris.id')
             ->select('bukus.*', DB::raw('GROUP_CONCAT(kategoris.namaKategori SEPARATOR ", ") as namaKategori'))
-            ->where('bukus.id', $id)
+            ->where('bukus.slug', $buku->slug)
             ->groupBy('bukus.id')
             ->get();
 

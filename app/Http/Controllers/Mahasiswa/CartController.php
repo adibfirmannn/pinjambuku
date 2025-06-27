@@ -40,10 +40,9 @@ class CartController extends Controller
 
 
 
-    public function formBorrow($id)
+    public function formBorrow(Buku $buku)
     {
-        $book = Buku::find($id);
-        return view('app.mahasiswa.borrow', compact('book'));
+        return view('app.mahasiswa.borrow', compact('buku'));
     }
 
     public function remove($id)
@@ -68,11 +67,12 @@ class CartController extends Controller
         $idMahasiswa = session('id');
         $tanggalPeminjaman = Carbon::now();
 
-        $cartItems = session('cart', []); // Mengambil data keranjang dari session
+        // Mengambil data keranjang dari session
+        $cartItems = session('cart', []);
 
         // Tambahkan ke tabel peminjamans
         $idPeminjaman = DB::table('peminjamans')->insertGetId([
-            'idAdmin' => 1,
+            'idAdmin' => "fa003692-3262-487a-ae66-69b3228e829b",
             'idMahasiswa' => $idMahasiswa,
             'tanggalPeminjaman' => $tanggalPeminjaman,
             'tanggalPengembalian' => null,
@@ -81,8 +81,8 @@ class CartController extends Controller
             'updated_at' => now(),
         ]);
 
-        // Tambahkan ke tabel detailspeminjamans dan perbarui jumlah buku
-        foreach ($cartItems as $idBuku) { // Karena array biasa, $idBuku langsung merepresentasikan ID buku
+
+        foreach ($cartItems as $idBuku) {
             // Masukkan data ke tabel detailspeminjamans
             DB::table('detailspeminjamans')->insert([
                 'idBuku' => $idBuku,
@@ -91,11 +91,6 @@ class CartController extends Controller
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
-
-            // Perbarui jumlah buku di tabel bukus
-            DB::table('bukus')
-                ->where('id', $idBuku)
-                ->decrement('jumlah', 1); // Kurangi jumlah buku sebanyak 1
         }
 
         // Kosongkan keranjang

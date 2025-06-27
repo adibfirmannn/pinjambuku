@@ -37,33 +37,62 @@ class BorrowingController extends Controller
 
     public function update(Request $request, $id)
     {
+        $request->validate(
+            [
+                'tanggalPengembalian' => 'required|date',
+                'status' => 'required|array',
+                'status.*' => 'required|boolean',
+            ],
+            [
+                'tanggalPengembalian.required' => 'tanggal pengembalian harus diisi',
+                'tanggalPengembalian.date' => 'tanggal pengembalian harus format date',
+                'status.required' => 'status harus diisi',
+                'status.array' => 'status harus array',
+                'status.boolean' => 'status harus boolean'
+            ]
+        );
 
-        $request->validate([
-            'tanggalPengembalian' => 'required|date',
-            'status' => 'required|array',
-            'status.*' => 'required|boolean',
-        ]);
+        // ambil data peminjaman untuk cek tanggalPengembalian awal
+        $peminjaman = DB::table('peminjamans')->where('id', $id)->first();
 
+        // ambil semua detail peminjaman
+        $details = DB::table('detailspeminjamans')
+            ->where('idPeminjaman', $id)
+            ->get();
 
-        // update kolom tanggalPengembalian di tabel peminjamans
+        // Cegah admin langsung ubah ke status = 1 saat tanggal pengembalian masih null (belum dikonfirmasi)
+        foreach ($request->input('status') as $index => $statusBaru) {
+            if (is_null($peminjaman->tanggalPengembalian) && (int)$statusBaru === 1) {
+                return back()->withErrors(['status' => 'Tidak boleh langsung tandai sebagai dikembalikan sebelum tanggal pengembalian dikonfirmasi.']);
+            }
+        }
+
+        // Update tanggal pengembalian (setelah validasi di atas)
         DB::table('peminjamans')
             ->where('id', $id)
             ->update(['tanggalPengembalian' => $request->input('tanggalPengembalian')]);
 
-        // ambil id-buku yang dipinjam oleh mahasiswa di id peminjaman tsb
-        $bookIds = DB::table('detailspeminjamans')
-            ->where('idPeminjaman', $id)
-            ->pluck('idBuku');
+        foreach ($request->input('status') as $index => $statusBaru) {
+            $detail = $details[$index];
+            $statusLama = (int)$detail->status;
+            $statusBaru = (int)$statusBaru;
+            $idBuku = $detail->idBuku;
 
-        // update kolom status di tabel detailspeminjamans, sesuai dengan id-buku dan id-peminjam
-        foreach ($request->input('status') as $index => $status) {
-            $bookId = $bookIds[$index];
+            // Update status di detail
             DB::table('detailspeminjamans')
                 ->where('idPeminjaman', $id)
-                ->where('idBuku', $bookId)
-                ->update(
-                    ['status' => $status]
-                );
+                ->where('idBuku', $idBuku)
+                ->update(['status' => $statusBaru]);
+
+            //  Jika status berubah dari belum ke sudah dikembalikan → tambah stok
+            if ($statusLama === 0 && $statusBaru === 1) {
+                DB::table('bukus')->where('id', $idBuku)->increment('jumlah', 1);
+            }
+
+            //  Jika status tetap 0 dan tanggal sudah diisi → kurangi stok
+            if ($statusLama === 0 && $statusBaru === 0 && $request->filled('tanggalPengembalian')) {
+                DB::table('bukus')->where('id', $idBuku)->decrement('jumlah', 1);
+            }
         }
 
         return redirect()->route('admin.borrowing')->with('success', 'Update Peminjaman Berhasil');

@@ -83,8 +83,10 @@
                     Apakah Anda yakin ingin menghapus item ini dari cart?
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <a href="#" id="confirmDeleteButton" class="btn btn-danger">Hapus</a>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                        style="background-color: #FFD460; border:none">Batal</button>
+                    <a href="#" id="confirmDeleteButton" class="btn btn-danger"
+                        style="background-color: #F07B3F; border:none">Hapus</a>
                 </div>
             </div>
         </div>

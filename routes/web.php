@@ -81,7 +81,7 @@ Route::middleware(['role:admin'])->group(function () {
 Route::middleware(['role:mahasiswa'])->group(function () {
     Route::get('/mahasiswa/dashboard', [DashboardMahasiswaController::class, 'index'])
         ->name('mahasiswa.dashboard');
-    Route::get('mahasiswa/show-book/{id}', [DashboardMahasiswaController::class, 'show'])
+    Route::get('mahasiswa/show-book/{buku:slug}', [DashboardMahasiswaController::class, 'show'])
         ->name('mahasiswa.show');
     Route::get('/mahasiswa/history', [HistoryController::class, 'index'])
         ->name('mahasiswa.history');
@@ -89,7 +89,7 @@ Route::middleware(['role:mahasiswa'])->group(function () {
         ->name('mahasiswa.cart');
     Route::get('/mahasiswa/cart/remove/{id}', [CartController::class, 'remove'])
         ->name('mahasiswa.cart.remove');
-    Route::get('/mahasiswa/borrow/{id}', [CartController::class, 'formBorrow'])
+    Route::get('/mahasiswa/borrow/{buku:slug}', [CartController::class, 'formBorrow'])
         ->name('mahasiswa.formBorrow');
     Route::post('/mahasiswa/borrow', [CartController::class, 'borrow'])
         ->name('mahasiswa.borrow');

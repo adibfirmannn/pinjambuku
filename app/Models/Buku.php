@@ -9,7 +9,11 @@ class Buku extends Model
 {
     use HasFactory;
 
-    protected $guarded = [
-        'id'
-    ];
+    protected $table = 'bukus';
+    protected $fillable = ['judul', 'slug', 'pengarang', 'deskripsi', 'gambar', 'jumlah', 'status'];
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
 }

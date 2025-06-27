@@ -32,7 +32,7 @@
                         <div class="card-body shadow">
                             <div class="row">
                                 <div class="col-md-6">
-                                    <a href="{{ route('mahasiswa.show', $book->id) }}">
+                                    <a href="{{ route('mahasiswa.show', $book->slug) }}">
                                         <img src="{{ asset('img/buku/' . $book->gambar) }}" alt="{{ $book->judul }}"
                                             class="img-fluid" style="height: 200px">
                                     </a>
@@ -43,9 +43,14 @@
                                         {{ Str::limit($book->pengarang, 20, '...') }}</p>
                                     <p class="card-text mt-3">{{ $book->namaKategori }}</p>
                                     <p class="card-text mt-3">{{ Str::limit($book->deskripsi, 20, '...') }}</p>
-                                    <a href="{{ route('mahasiswa.formBorrow', $book->id) }}"
-                                        class="btn btn-primary border border-white"
-                                        style="background-color: #F07B3F; width:100%">Pinjam</a>
+                                    @if ($book->jumlah > 0)
+                                        <a href="{{ route('mahasiswa.formBorrow', $book->slug) }}"
+                                            class="btn btn-primary border border-white"
+                                            style="background-color: #F07B3F; width:100%">Pinjam</a>
+                                    @else
+                                        <button class="btn btn-secondary w-100" disabled>Stok Habis</button>
+                                    @endif
+
                                 </div>
                             </div>
                         </div>

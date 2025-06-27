@@ -79,7 +79,7 @@
                                         '<td class="p-3">' + peminjaman.judul + '</td>' +
                                         '<td class="p-3">' + peminjaman.tanggalPeminjaman +
                                         '</td>' +
-                                        '<td class="p-3">' + peminjaman.tanggalPengembalian +
+                                        '<td class="p-3">' + (peminjaman.tanggalPengembalian ? peminjaman.tanggalPengembalian: 'Belum dikonfirmasi') +
                                         '</td>' +
                                         '<td class="p-3">' + (peminjaman.allReturned ?
                                             'Sudah dikembalikan' : 'Belum dikembalikan') +
